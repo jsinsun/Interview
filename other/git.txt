@@ -1,0 +1,4 @@
+git branch -a //查看所有远程分支
+git checkout -b 本地分支名 origin/远程分支名 //新建分支并切换到指定分支
+git checkout -b 本地分支名 origin/远程分支名 //将本地分支推送到远程
+git branch -vv //查看本地分支及追踪的分支
