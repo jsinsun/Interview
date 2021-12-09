@@ -5,54 +5,80 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="js_promise.js"></script>
+    <!-- <script src="js_promise.js"></script> -->
   </head>
   <body>
     <div>
       apply:方法能劫持另外一个对象的方法，继承另外一个对象的属性.
-      Function.apply(obj,args)方法能接收两个参数
-      obj：这个对象将代替Function类里this对象
-      args：这个是数组，它将作为参数传给Function（args-->arguments）
+      call、apply、bind 都是函数的方法，并且不支持箭头函数
+    </div>
+    <div>
+      <img src="../assets/images/this.png" />
     </div>
   </body>
 </html>
 <script>
   //call
-  function add(a, b) {
-    return a + b;
+  function fun() {
+    console.log(this.name);
   }
 
-  function sub(a, b) {
-    return a - b;
-  }
+  let cat = {
+    name: "jsin",
+  };
 
-  //call()方法改变了this的指向，使得sub可以调用add的方法
-  console.log(add.call(sub, 2, 1)); //3
-
-  function person(name, age) {
-    this.name = name;
-    this.age = age;
-  }
-
-  function student(name, age, grade) {
-    person.call(this, name, age);
-    this.grade = grade;
-  }
-
-  const stu = new student("jsin", 27, "男");
-  console.log(stu);
-
-  //apply
-  var person = {
-    fullName: function (city, country) {
-      return this.firstName + " " + this.lastName + "," + city + "," + country;
+  let dog = {
+    name: "snoopdogg",
+    sayname() {
+      console.log("my name is " + this.name);
+    },
+    food(food) {
+      console.log(`${this.name}喜欢吃${food}`);
     },
   };
-  var person1 = {
-    firstName: "John",
-    lastName: "Doe",
-  };
 
-  var res = person.fullName.apply(person1, ["Oslo", "Norway"]);
-  console.log(res);
+  dog.food.apply(cat, ["火锅"]);
+  //bind 返回一个函数
+  let fn = dog.food.bind(cat, "火锅");
+
+  // setTimeout(() => {
+  //   dog.sayname();
+  // }, 50);
+
+  //
+  // Function.prototype.newCall = function (obj) {
+  //   var obj = obj || window; //判断对象是否空对象，如果是则指向window
+  //   obj.p = this; //改变this的指向
+
+  //   var newArguments = [];
+
+  //   for (i = 1, i < arguments; i++; ) {
+  //     newArguments.push("arguments[" + i + "]");
+  //   }
+  //   var result = eval("obj.p(" + newArguments + ")");
+
+  //   obj.p();
+  //   delete obj.p;
+  //   return result;
+  // };
+
+  function toObj(str, res = {}) {
+    let arr = JSON.parse(str);
+
+    arr.forEach((element) => {
+      const arr1 = element.split(" x ");
+
+      res[arr1[0]] = arr1[1];
+    });
+
+    return res;
+  }
+
+  console.log(toObj('["ITEM0001 x 1", "ITEM0013 x 2", "ITEM0022 x 1"]'));
 </script>
+
+<style>
+  .disable {
+    pointer-events: none;
+  }
+</style>
