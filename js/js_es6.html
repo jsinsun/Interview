@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="submit" />
+  </body>
+</html>
+
+<script>
+  //https://www.cnblogs.com/mhtss/p/11021752.html
+
+  function submit(e) {
+    console.log("tijiao");
+  }
+
+  //防抖
+  function debounce(fn, timer = 2000) {
+    let timeout = null;
+    return function () {
+      const fristClick = !timeout;
+      if (timer) clearTimeout(timer);
+
+      if (fristClick) {
+        fn.apply(this, arguments);
+      }
+
+      timeout = setTimeout(() => {
+        timeout = null;
+      }, timer);
+    };
+  }
+
+  function throttle(fn, delay) {
+    let begin = 0;
+    return function () {
+      const cur = new Date().getTime();
+      //判断时间间隔
+      if (cur - begin > delay) {
+        fn.apply(this, arguments);
+        begin = cur;
+      }
+    };
+  }
+
+  let btn = document.getElementById("submit");
+
+  btn.addEventListener("click", debounce(submit, 2000));
+</script>

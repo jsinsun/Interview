@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <p>防抖（debounce）：当持续触发事件时，保证只执行最后一次事件处理函数</p>
+      <p>防抖（debounce）：在一定的时间间隔内，将多次触发变成一次触发</p>
+      <button id="debounce">防抖</button>
+    </div>
+
+    <div>
+      <p>
+        节流（throttle）：当持续触发事件时，保证一定时间段内只调用一次事件处理函数
+      </p>
+      <p>
+        节流（throttle）：减少一段时间内函数触发频率
+      </p>
+    </div>
+  </body>
+</html>
+
+<script>
+  function isUpgrade(current_version, compare_version = "6.0.0.0") {
+    var compare_version_array = compare_version.split(".");
+    var current_version_array = current_version.split(".");
+    var is_upgrade = true;
+    if (
+      compare_version_array.length == 4 &&
+      current_version_array.length == 4
+    ) {
+      for (var i = 0; i < compare_version_array.length; i++) {
+        if (
+          parseInt(compare_version_array[i]) <
+          parseInt(current_version_array[i])
+        ) {
+          is_upgrade = true;
+          break;
+        } else {
+          if (
+            parseInt(compare_version_array[i]) ===
+            parseInt(current_version_array[i])
+          ) {
+            continue;
+          } else {
+            is_upgrade = false;
+            break;
+          }
+        }
+      }
+    }
+    return is_upgrade;
+  }
+
+  // 防抖
+
+  // function debounce(fn) {
+  //   let timeout = null; // 创建一个标记用来存放定时器的返回值
+  //   return function () {
+  //     clearTimeout(timeout); // 每当用户输入的时候把前一个 setTimeout clear 掉
+  //     timeout = setTimeout(() => {
+  //       // 然后又创建一个新的 setTimeout, 这样就能保证输入字符后的 interval 间隔内如果还有字符输入的话，就不会执行 fn 函数
+  //       fn();
+  //     }, 500);
+  //   };
+  // }
+  // function sayHi() {
+  //   console.log("防抖成功");
+  // }
+  // let box = document.getElementById("box");
+  // box.addEventListener("click", debounce(sayHi));
+
+  function submit(e) {
+    //e===arguments
+    console.log(arguments);//实参：函数调用时实际传的参数
+    console.log(this);//触发事件的对象
+    console.log(e);//形参：函数定义的参数
+  }
+
+  function debounce(fn, timer, triggerNow = true) {
+    let timeout = null; //创建一个标记用来存放定时器的返回值
+    return function () {
+      //submit();
+      if (timeout) clearTimeout(timeout);
+
+      //判断是否第一次点击
+      // if (triggerNow) {
+      let fristClick = !timeout; //将null变为bool值
+      //根据t的值判断是否第一次点击
+      if (fristClick) {
+        //!timeout
+        fn.apply(this, arguments);
+      }
+
+      //第一过后实现延时处理
+      timeout = setTimeout(() => {
+        timeout = null;
+      }, timer);
+      // }
+
+      // timeout = setTimeout(() => {
+      //   //arguments 获取实参 this 指向按钮本身
+      //   fn.apply(this, arguments);
+      // }, timer);
+    };
+  }
+
+  //节流
+  function throttle(fn, delay) {
+    let begin = 0;
+    return function () {
+      let cur = new Date().getTime();
+      console.log(cur);
+      if (cur - begin > delay) {
+        fn.apply(this, arguments);
+        begin = cur;
+      }
+    };
+  }
+
+  const btn = document.getElementById("debounce");
+  btn.addEventListener("click", throttle(submit, 2000), false);
+
+  // function throttle(fn) {
+  //   let canRun = true; // 通过闭包保存一个标记
+  //   return function () {
+  //     if (!canRun) return; // 在函数开头判断标记是否为true，不为true则return
+  //     canRun = false; // 立即设置为false
+  //     setTimeout(() => {
+  //       // 将外部传入的函数的执行放在setTimeout中
+  //       fn();
+  //       // 最后在setTimeout执行完毕后再把标记设置为true(关键)表示可以执行下一次循环了。当定时器没有执行的时候标记永远是false，在开头被return掉
+  //       canRun = true;
+  //     }, 500);
+  //   };
+  // }
+
+  // function sayHi(e) {
+  //   console.log("节流");
+  // }
+  // window.addEventListener("resize", throttle(sayHi));
+</script>
